@@ -44,6 +44,9 @@ class MyApp extends StatelessWidget {
   final CustomColors _customColors= CustomColors();
   @override
   Widget build(BuildContext context) {
+    List<DateTime> offDates = [
+      DateTime(2023, 5, 30)
+    ];
     List<AppointmentsRecord> appointments = [
       AppointmentsRecord( 
         start: DateTime.now(),
@@ -154,7 +157,7 @@ class MyApp extends StatelessWidget {
           title: const Text('Appointments'),
           backgroundColor: _customColors.primary,
         ),
-        body: WeekCalendar(appointments: appointments),
+        body: WeekCalendar(appointments: appointments, offDates: offDates),
       ),
     );
   }
@@ -166,10 +169,12 @@ class WeekCalendar extends StatefulWidget {
     this.width,
     this.height,
     required this.appointments,
+    this.offDates
   }) : super(key: key);
 
   final double? width;
   final double? height;
+  final List<DateTime>? offDates;
   final List<AppointmentsRecord> appointments;
 
   @override
@@ -205,6 +210,8 @@ class _WeekCalendarState extends State<WeekCalendar> {
         monthTextStyle: TextStyle(color: _customColors.text, fontSize: 13, fontWeight: FontWeight.w400),
         dayTextStyle: TextStyle(color: _customColors.text, fontSize: 13, fontWeight: FontWeight.w400),
         dateTextStyle: TextStyle(color: _customColors.text, fontSize: 22, fontWeight: FontWeight.w500),
+        inactiveDates: widget.offDates,
+        deactivatedColor: const Color(0xFFC6C6C6),
         locale: "es",
         onDateChange: (date) {
           setState(() {
@@ -235,7 +242,7 @@ class _WeekCalendarState extends State<WeekCalendar> {
               //checking if the appointment is on the day selected
               if (DateFormat('dd MMM yyyy').format(widget.appointments[index].start) ==
                   DateFormat('dd MMM yyyy').format(_selectedDate)) {
-                return _appointment(index,80);
+                return _appointment(index,70);
               } else {
                 return Container();
               }
@@ -246,71 +253,77 @@ class _WeekCalendarState extends State<WeekCalendar> {
   }
 
   Widget _appointment(int index, double height){
-    return Container(
-      margin: const EdgeInsets.only(left: 10, right: 10, bottom: 15),
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
-            spreadRadius: 0,
-            blurRadius: 8,
-            offset: const Offset(1, 7), // Cambia la posición de la sombra (eje X, eje Y)
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            height: height,
-            width: 13,
-            decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), bottomLeft: Radius.circular(15)),
-                color: _customColors.primary,
-              ),
-          ),
-          Expanded(
-            child: Container(
+    return GestureDetector(
+      onTap: () {
+        print("funciona");  
+      },
+      child: Container(
+        margin: const EdgeInsets.only(left: 10, right: 10, bottom: 15),
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              spreadRadius: 0,
+              blurRadius: 8,
+              offset: const Offset(1, 7), // Cambia la posición de la sombra (eje X, eje Y)
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
               height: height,
-              alignment: Alignment.center,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(topRight: Radius.circular(15), bottomRight: Radius.circular(15)),
-                color: Colors.white,
-              ),
-              child: Row(
-                children: [
-                  Column(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                        child: Text(
-                          widget.appointments[index].custumer,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: _customColors.text,
+              width: 13,
+              decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), bottomLeft: Radius.circular(15)),
+                  color: _customColors.primary,
+                ),
+            ),
+            Expanded(
+              child: Container(
+                height: height,
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(topRight: Radius.circular(15), bottomRight: Radius.circular(15)),
+                  color: Colors.white,
+                ),
+                child: Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(left: 10, right: 10, top: 12, bottom: 5),
+                          child: Text(
+                            widget.appointments[index].custumer,
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: _customColors.text,
+                            ),
                           ),
                         ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.symmetric( horizontal: 10),
-                        child: Text(
-                          "${DateFormat('h:mm a').format(widget.appointments[index].start)} - ${DateFormat('h:mm a').format(widget.appointments[index].end)}",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: _customColors.primary,
+                        Container(
+                          margin: const EdgeInsets.symmetric( horizontal: 10),
+                          child: Text(
+                            "${DateFormat('h:mm a').format(widget.appointments[index].start)} - ${DateFormat('h:mm a').format(widget.appointments[index].end)}",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: _customColors.primary,
+                            ),
                           ),
-                        ),
-                      )
-                    ],
-                  ),
-                ],
+                        )
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
