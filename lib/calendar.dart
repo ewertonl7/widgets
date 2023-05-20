@@ -14,7 +14,7 @@ class AppointmentsRecord {
   });
 }
 
-class CustomColorsv2{
+class CustomColorsv3{
   final Color primary = const Color(0xFF8BA6D5);
   final Color accent = const Color(0xFF7898CE);
   final Color background = const Color(0xFFFBFCFE);
@@ -219,7 +219,7 @@ class _WeekCalendarState extends State<WeekCalendar> {
     bool _left = false;
     bool _right = false;
     if (widget.appointments.isEmpty) {
-      return _noAppointments();
+      return Container();
     } else {
       return Expanded(
         child: ListView.builder(
@@ -229,15 +229,13 @@ class _WeekCalendarState extends State<WeekCalendar> {
             itemBuilder: (context, index) {
       
               //getting time of appointments
-              String startTime =
-                  DateFormat('HH:mm').format(widget.appointments[index].start);
-              String endTime =
-                  DateFormat('HH:mm').format(widget.appointments[index].end);
+              String startTime = DateFormat('HH:mm').format(widget.appointments[index].start);
+              String endTime = DateFormat('HH:mm').format(widget.appointments[index].end);
       
               //checking if the appointment is on the day selected
               if (DateFormat('dd MMM yyyy').format(widget.appointments[index].start) ==
                   DateFormat('dd MMM yyyy').format(_selectedDate)) {
-                return _appointmentV2(index,80);
+                return _appointment(index,80);
               } else {
                 return Container();
               }
@@ -247,83 +245,7 @@ class _WeekCalendarState extends State<WeekCalendar> {
     }
   }
 
-  Widget _noAppointments() {
-    return Container(
-      height: 0,
-    );
-  }
-
   Widget _appointment(int index, double height){
-    return Container(
-      margin: const EdgeInsets.only(left: 10, right: 10, bottom: 15),
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
-            spreadRadius: 0,
-            blurRadius: 8,
-            offset: const Offset(1, 7), // Cambia la posición de la sombra (eje X, eje Y)
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            height: height,
-            width: 13,
-            decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), bottomLeft: Radius.circular(15)),
-                color: _customColors.primary,
-              ),
-          ),
-          Expanded(
-            child: Container(
-              height: height,
-              alignment: Alignment.center,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(topRight: Radius.circular(15), bottomRight: Radius.circular(15)),
-                color: Colors.white,
-              ),
-              child: Row(
-                children: [
-                  Column(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                        child: Text(
-                          widget.appointments[index].custumer,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: _customColors.text,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.symmetric( horizontal: 10),
-                        child: Text(
-                          "${DateFormat('h:mm a').format(widget.appointments[index].start)} - ${DateFormat('h:mm a').format(widget.appointments[index].end)}",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: _customColors.primary,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _appointmentV2(int index, double height){
     return Container(
       margin: const EdgeInsets.only(left: 10, right: 10, bottom: 15),
       decoration: BoxDecoration(
